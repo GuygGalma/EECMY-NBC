@@ -1,0 +1,1569 @@
+<!DOCTYPE html>
+<html lang="om">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EECMY Nagele Borana Congregation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+    <style>
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --primary: #1a4d2e;
+            --primary-light: #2a7a4a;
+            --primary-dark: #0f331f;
+            --accent: #d4a843;
+            --accent-light: #f0d68a;
+            --bg: #f8f5f0;
+            --card: #ffffff;
+            --text: #1e1e1e;
+            --text-light: #4a4a4a;
+            --shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            --radius: 16px;
+            --transition: 0.3s ease;
+            --sidebar-width: 250px;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        ul {
+            list-style: none;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 28px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(26, 77, 46, 0.3);
+        }
+        .btn-accent {
+            background: var(--accent);
+            color: #1e1e1e;
+        }
+        .btn-accent:hover {
+            background: var(--accent-light);
+            transform: translateY(-2px);
+        }
+        .btn-danger {
+            background: #c0392b;
+            color: #fff;
+        }
+        .btn-danger:hover {
+            background: #e74c3c;
+        }
+
+        /* ===== LOGIN OVERLAY ===== */
+        #loginOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 51, 31, 0.92);
+            backdrop-filter: blur(6px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            padding: 20px;
+            transition: opacity 0.4s ease, visibility 0.4s;
+        }
+        #loginOverlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .login-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 48px 40px;
+            max-width: 420px;
+            width: 100%;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        .login-card .logo-icon {
+            width: 72px;
+            height: 72px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 2.2rem;
+            color: #fff;
+        }
+        .login-card h2 {
+            color: var(--primary);
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+        .login-card p.sub {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 24px;
+        }
+        .login-card .form-group {
+            margin-bottom: 16px;
+            text-align: left;
+        }
+        .login-card label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: block;
+            margin-bottom: 4px;
+            color: var(--text);
+        }
+        .login-card input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            background: var(--bg);
+        }
+        .login-card input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(26, 77, 46, 0.08);
+        }
+        .login-card .btn {
+            width: 100%;
+            margin-top: 8px;
+        }
+        .login-card .error-msg {
+            color: #c0392b;
+            font-size: 0.85rem;
+            margin-top: 12px;
+            min-height: 24px;
+        }
+
+        /* ===== DASHBOARD ===== */
+        #dashboard {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #f1f4f8;
+            z-index: 99998;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease, opacity 0.3s;
+            transform: translateY(0);
+            opacity: 1;
+        }
+        #dashboard.hidden {
+            transform: translateY(20px);
+            opacity: 0;
+            pointer-events: none;
+        }
+        .dash-header {
+            background: var(--primary-dark);
+            color: #fff;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+        .dash-header h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .dash-header h2 i {
+            color: var(--accent);
+        }
+        .dash-header .dash-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .dash-header .dash-actions .btn {
+            padding: 8px 18px;
+            font-size: 0.8rem;
+        }
+        .dash-body {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        .dash-sidebar {
+            width: var(--sidebar-width);
+            background: #fff;
+            padding: 20px 0;
+            border-right: 1px solid #e9edf2;
+            flex-shrink: 0;
+            overflow-y: auto;
+        }
+        .dash-sidebar .menu-item {
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: var(--text-light);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border-left: 4px solid transparent;
+            font-size: 0.9rem;
+        }
+        .dash-sidebar .menu-item:hover {
+            background: #f0f4f9;
+            color: var(--primary);
+        }
+        .dash-sidebar .menu-item.active {
+            background: #eef6f0;
+            color: var(--primary);
+            border-left-color: var(--primary);
+        }
+        .dash-content {
+            flex: 1;
+            padding: 28px 32px;
+            overflow-y: auto;
+            background: #f8fafc;
+        }
+        .dash-content .page-section {
+            display: none;
+            animation: fadeUp 0.3s ease;
+        }
+        .dash-content .page-section.active {
+            display: block;
+        }
+        @keyframes fadeUp {
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+        .stat-card {
+            background: #fff;
+            padding: 20px 22px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border-left: 6px solid var(--primary);
+        }
+        .stat-card .stat-number {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+        .stat-card .stat-label {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        .stat-card.gold {
+            border-left-color: var(--accent);
+        }
+        .stat-card.gold .stat-number {
+            color: var(--accent);
+        }
+
+        /* Dashboard Forms & Lists (reuse admin styles) */
+        .dash-content .form-group {
+            margin-bottom: 18px;
+        }
+        .dash-content label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 4px;
+            font-size: 0.9rem;
+        }
+        .dash-content input,
+        .dash-content textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            background: #fff;
+        }
+        .dash-content input:focus,
+        .dash-content textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(26, 77, 46, 0.08);
+        }
+        .dash-content .admin-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: #fff;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+        .dash-content .admin-list-item .del {
+            color: #c0392b;
+            cursor: pointer;
+            font-weight: 700;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            padding: 0 8px;
+        }
+        .dash-content .admin-list-item .del:hover {
+            color: #e74c3c;
+        }
+
+        /* ===== PUBLIC SITE ===== */
+        /* Header / Nav */
+        header {
+            background: var(--card);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 0;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.4rem;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+        .logo h1 {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--primary);
+            line-height: 1.2;
+        }
+        .logo h1 small {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 400;
+            color: var(--text-light);
+        }
+        .nav-toggle {
+            display: none;
+            font-size: 1.6rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--primary);
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .nav-links a {
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: var(--transition);
+            color: var(--text-light);
+        }
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: var(--primary);
+            color: #fff;
+        }
+        .nav-links a.admin-link {
+            background: #2c3e50;
+            color: #fff;
+        }
+        .nav-links a.admin-link:hover {
+            background: #1a252f;
+        }
+
+        /* Hero, Sections, Cards, etc. (from previous) */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: #fff;
+            padding: 80px 0 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -40px;
+            right: -40px;
+            width: 300px;
+            height: 300px;
+            background: rgba(212, 168, 67, 0.08);
+            border-radius: 50%;
+        }
+        .hero h2 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+        }
+        .hero p {
+            font-size: 1.15rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 28px;
+            position: relative;
+            z-index: 1;
+        }
+        section {
+            padding: 60px 0;
+        }
+        .section-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        .section-sub {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 40px;
+            font-size: 1.05rem;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 24px;
+        }
+        .card {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 28px 22px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(0, 0, 0, 0.03);
+        }
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+        }
+        .card .icon {
+            font-size: 2.2rem;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+        .group-category {
+            margin-bottom: 48px;
+        }
+        .group-category h3 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary);
+            border-left: 6px solid var(--accent);
+            padding-left: 16px;
+            margin-bottom: 20px;
+        }
+        .group-badge {
+            display: inline-block;
+            background: var(--primary);
+            color: #fff;
+            padding: 6px 18px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin: 4px 6px 4px 0;
+        }
+        .group-badge.gold {
+            background: var(--accent);
+            color: #1e1e1e;
+        }
+        .group-badge.light {
+            background: #e8f0e8;
+            color: var(--primary);
+        }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        .gallery-grid .gallery-item {
+            aspect-ratio: 4/3;
+            background: #eae7e0;
+            border-radius: var(--radius);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.8rem;
+            color: #aaa;
+            transition: var(--transition);
+            cursor: default;
+            font-weight: 300;
+        }
+        .gallery-grid .gallery-item .placeholder-text {
+            color: #999;
+            font-size: 0.85rem;
+            text-align: center;
+            padding: 8px;
+        }
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+        .video-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        .video-card .video-placeholder {
+            aspect-ratio: 16/9;
+            background: #1e1e1e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 3rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .video-card .video-placeholder:hover {
+            opacity: 0.85;
+        }
+        .video-card .video-info {
+            padding: 16px 20px;
+        }
+        .video-card .video-info h4 {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        .contact-wrap {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+        .contact-info .info-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+        .contact-info .info-item i {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+            transition: var(--transition);
+            background: var(--card);
+        }
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(26, 77, 46, 0.08);
+        }
+        .contact-form textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+        .comment-box {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 28px;
+            box-shadow: var(--shadow);
+            margin-top: 32px;
+        }
+        .comment-box .comment-item {
+            border-bottom: 1px solid #eee;
+            padding: 16px 0;
+        }
+        .comment-box .comment-item:last-child {
+            border-bottom: none;
+        }
+        .comment-item .name {
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .comment-item .date {
+            font-size: 0.75rem;
+            color: #999;
+            margin-left: 12px;
+        }
+        .comment-item .text {
+            margin-top: 4px;
+            color: var(--text-light);
+        }
+        .comment-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .comment-form .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .comment-form input,
+        .comment-form textarea {
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            background: var(--bg);
+        }
+        .comment-form input:focus,
+        .comment-form textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .comment-form textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        .timeline-item {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+            border-left: 6px solid var(--accent);
+        }
+        .timeline-item .date-tag {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+        .timeline-item h4 {
+            font-weight: 700;
+            margin: 4px 0 6px;
+        }
+        footer {
+            background: var(--primary-dark);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 40px 0 24px;
+            margin-top: 20px;
+        }
+        footer .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 32px;
+            margin-bottom: 32px;
+        }
+        footer h4 {
+            color: #fff;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        footer a {
+            color: rgba(255, 255, 255, 0.7);
+            transition: var(--transition);
+        }
+        footer a:hover {
+            color: var(--accent-light);
+        }
+        footer .copyright {
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 20px;
+            font-size: 0.85rem;
+        }
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--primary);
+            color: #fff;
+            padding: 16px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            z-index: 999999;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: var(--transition);
+        }
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .tag-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+        @media (max-width: 768px) {
+            .nav-toggle {
+                display: block;
+            }
+            .nav-links {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 12px 0 4px;
+                gap: 4px;
+            }
+            .nav-links.open {
+                display: flex;
+            }
+            .nav-links a {
+                width: 100%;
+                padding: 10px 16px;
+            }
+            .hero h2 {
+                font-size: 1.8rem;
+            }
+            .contact-wrap {
+                grid-template-columns: 1fr;
+            }
+            .dash-sidebar {
+                width: 60px;
+                padding: 12px 0;
+            }
+            .dash-sidebar .menu-item span {
+                display: none;
+            }
+            .dash-sidebar .menu-item {
+                justify-content: center;
+                padding: 12px;
+            }
+            .dash-content {
+                padding: 16px;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .login-card {
+                padding: 32px 24px;
+            }
+            .comment-form .row {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 480px) {
+            .hero h2 {
+                font-size: 1.5rem;
+            }
+            .gallery-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .dash-sidebar {
+                width: 50px;
+            }
+            .dash-sidebar .menu-item {
+                padding: 10px;
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== LOGIN OVERLAY ===== -->
+    <div id="loginOverlay">
+        <div class="login-card">
+            <div class="logo-icon">⛪</div>
+            <h2>Admin Login</h2>
+            <p class="sub">EECMY Nagele Borana Congregation</p>
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="loginUser" placeholder="admin" value="admin" />
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="loginPass" placeholder="••••••••" value="admin123" />
+            </div>
+            <button class="btn btn-primary" onclick="handleLogin()"><i class="fas fa-sign-in-alt"></i> Login</button>
+            <div id="loginError" class="error-msg"></div>
+            <p style="margin-top:16px; font-size:0.8rem; color:var(--text-light);">Default: admin / admin123</p>
+        </div>
+    </div>
+
+    <!-- ===== DASHBOARD ===== -->
+    <div id="dashboard" class="hidden">
+        <div class="dash-header">
+            <h2><i class="fas fa-church"></i> EECMY Nagele Borana — Admin</h2>
+            <div class="dash-actions">
+                <button class="btn btn-accent" onclick="closeDashboard()" style="background:#fff;color:#1e1e1e;">
+                    <i class="fas fa-eye"></i> View Site
+                </button>
+                <button class="btn btn-danger" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </div>
+        <div class="dash-body">
+            <div class="dash-sidebar" id="dashSidebar">
+                <div class="menu-item active" data-page="dashOverview"><i class="fas fa-chart-pie"></i> <span>Overview</span></div>
+                <div class="menu-item" data-page="dashAnnounce"><i class="fas fa-bullhorn"></i> <span>Announcements</span></div>
+                <div class="menu-item" data-page="dashEvents"><i class="fas fa-calendar-alt"></i> <span>Events</span></div>
+                <div class="menu-item" data-page="dashGallery"><i class="fas fa-images"></i> <span>Gallery</span></div>
+                <div class="menu-item" data-page="dashVideos"><i class="fas fa-video"></i> <span>Videos</span></div>
+                <div class="menu-item" data-page="dashComments"><i class="fas fa-comment-dots"></i> <span>Comments</span></div>
+            </div>
+            <div class="dash-content" id="dashContent">
+                <!-- Overview -->
+                <div class="page-section active" id="dashOverview">
+                    <h2 style="margin-bottom:20px;">📊 Dashboard Overview</h2>
+                    <div class="stats-grid" id="statsGrid">
+                        <div class="stat-card"><div class="stat-number" id="statAnnounce">0</div><div class="stat-label">Announcements</div></div>
+                        <div class="stat-card gold"><div class="stat-number" id="statEvents">0</div><div class="stat-label">Events</div></div>
+                        <div class="stat-card"><div class="stat-number" id="statGallery">0</div><div class="stat-label">Gallery Items</div></div>
+                        <div class="stat-card gold"><div class="stat-number" id="statVideos">0</div><div class="stat-label">Videos</div></div>
+                        <div class="stat-card"><div class="stat-number" id="statComments">0</div><div class="stat-label">Comments</div></div>
+                    </div>
+                    <p style="color:var(--text-light);">Use the sidebar to manage content. All changes are saved automatically.</p>
+                </div>
+
+                <!-- Announcements -->
+                <div class="page-section" id="dashAnnounce">
+                    <h3 style="margin-bottom:16px;">📢 Manage Announcements</h3>
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" id="announceTitle" placeholder="Announcement title" />
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="announceDesc" rows="3" placeholder="Details..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" id="announceDate" />
+                    </div>
+                    <button class="btn btn-primary" onclick="addAnnouncement()">Add Announcement</button>
+                    <div class="admin-list" id="adminAnnounceList" style="margin-top:20px;"></div>
+                </div>
+
+                <!-- Events -->
+                <div class="page-section" id="dashEvents">
+                    <h3 style="margin-bottom:16px;">📅 Manage Events</h3>
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" id="eventTitle" placeholder="Event title" />
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="eventDesc" rows="3" placeholder="Details..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" id="eventDate" />
+                    </div>
+                    <button class="btn btn-primary" onclick="addEvent()">Add Event</button>
+                    <div class="admin-list" id="adminEventList" style="margin-top:20px;"></div>
+                </div>
+
+                <!-- Gallery -->
+                <div class="page-section" id="dashGallery">
+                    <h3 style="margin-bottom:16px;">🖼️ Manage Gallery</h3>
+                    <div class="form-group">
+                        <label>Image Label / URL</label>
+                        <input type="text" id="galleryInput" placeholder="e.g. 'Sunday Worship' or image URL" />
+                    </div>
+                    <button class="btn btn-primary" onclick="addGalleryItem()">Add Image</button>
+                    <div class="admin-list" id="adminGalleryList" style="margin-top:20px;"></div>
+                </div>
+
+                <!-- Videos -->
+                <div class="page-section" id="dashVideos">
+                    <h3 style="margin-bottom:16px;">🎬 Manage Videos</h3>
+                    <div class="form-group">
+                        <label>Video Title</label>
+                        <input type="text" id="videoInput" placeholder="Video title" />
+                    </div>
+                    <button class="btn btn-primary" onclick="addVideoItem()">Add Video</button>
+                    <div class="admin-list" id="adminVideoList" style="margin-top:20px;"></div>
+                </div>
+
+                <!-- Comments -->
+                <div class="page-section" id="dashComments">
+                    <h3 style="margin-bottom:16px;">💬 Moderate Comments</h3>
+                    <p style="color:var(--text-light); margin-bottom:12px;">Delete inappropriate comments.</p>
+                    <div class="admin-list" id="adminCommentList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== PUBLIC HEADER ===== -->
+    <header>
+        <div class="container header-inner">
+            <div class="logo">
+                <div class="logo-icon">⛪</div>
+                <div>
+                    <h1>EECMY Nagele Borana <small>Congregation</small></h1>
+                </div>
+            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Menu"><i class="fas fa-bars"></i></button>
+            <nav class="nav-links" id="navLinks">
+                <a href="#home" class="active" data-page="home">Home</a>
+                <a href="#about" data-page="about">About</a>
+                <a href="#gallery" data-page="gallery">Gallery</a>
+                <a href="#video" data-page="video">Video</a>
+                <a href="#contact" data-page="contact">Contact</a>
+                <a href="#announcements" data-page="announcements">Announcements</a>
+                <a href="#events" data-page="events">Events</a>
+                <a href="#groups" data-page="groups">Groups</a>
+                <a href="#comments" data-page="comments">Comments</a>
+                <a href="#" id="adminLoginBtn" class="admin-link"><i class="fas fa-user-cog"></i> Admin</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ===== PUBLIC CONTENT ===== -->
+    <section id="home">
+        <div class="hero">
+            <div class="container">
+                <h2>EECMY Nagele Borana</h2>
+                <p>📍 Nagelle Borana, Ethiopia &bull; <i class="fas fa-church"></i> Worship &amp; Community</p>
+                <p style="font-size:1.1rem; max-width:700px;">
+                    "Akka Waaqayyo jaallatu, akkasumas akka Waaqayyo jaallatu." <br />
+                    <span style="opacity:0.7; font-size:0.9rem;">— 1 Yohannis 4:11</span>
+                </p>
+                <a href="#about" class="btn btn-accent">Learn More <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+        <div class="container">
+            <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:24px; margin-top:-20px;">
+                <div class="card text-center"><div class="icon"><i class="fas fa-users"></i></div><h3>Our Community</h3><p>Welcoming all to worship and grow in faith.</p></div>
+                <div class="card text-center"><div class="icon"><i class="fas fa-bible"></i></div><h3>Word of God</h3><p>Teaching and living the Gospel daily.</p></div>
+                <div class="card text-center"><div class="icon"><i class="fas fa-hand-holding-heart"></i></div><h3>Service</h3><p>Serving our community with love.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" style="background:#fff;">
+        <div class="container">
+            <h2 class="section-title">About Us</h2>
+            <p class="section-sub">EECMY Nagele Borana Congregation — History, Mission &amp; Vision</p>
+            <div style="max-width:800px; margin:0 auto; text-align:center; font-size:1.05rem; color:var(--text-light);">
+                <p><strong>EECMY</strong> (Ethiopian Evangelical Church Mekane Yesus) is a Lutheran denomination in Ethiopia. Our congregation in Nagele Borana is committed to spreading the Gospel, serving the community, and nurturing disciples of Jesus Christ.</p>
+                <p style="margin-top:16px;"><strong>Mission:</strong> To proclaim the good news of Jesus Christ and to make disciples of all nations.</p>
+                <p><strong>Vision:</strong> A vibrant, growing, and united congregation that reflects the love of Christ in Borana and beyond.</p>
+            </div>
+            <div style="margin-top:40px;">
+                <h3 style="text-align:center; font-size:1.5rem; color:var(--primary);">Our Church Groups</h3>
+                <div id="groups" style="margin-top:20px;">
+                    <div class="group-category">
+                        <h3><i class="fas fa-users-cog"></i> Garee Bulchinsaa (Management)</h3>
+                        <div><span class="group-badge gold">Jaaroree</span><span class="group-badge gold">WALDAA TUU</span></div>
+                    </div>
+                    <div class="group-category">
+                        <h3><i class="fas fa-pray"></i> Garee Haafuraa (Spiritual)</h3>
+                        <div style="margin-bottom:12px;">
+                            <strong style="color:var(--primary);">Luboota:</strong>
+                            <span class="group-badge">Lubaa Halkaannoo Liibaan</span>
+                            <span class="group-badge">Lubaa Waaqqoo DiIddoo</span>
+                            <span class="group-badge">Lubaa Teehediroos Nagaash</span>
+                            <span class="group-badge">Lubaa Bacaa Wakjiraa</span>
+                        </div>
+                        <div style="margin-bottom:12px;">
+                            <strong style="color:var(--primary);">Hojjataa Wengelaa:</strong>
+                            <span class="group-badge light">Ashaanafii Asfaw</span>
+                            <span class="group-badge light">Alaamshay Nagaash</span>
+                            <span class="group-badge light">Eliiyaas</span>
+                        </div>
+                        <div>
+                            <strong style="color:var(--primary);">Gareewwan:</strong>
+                            <span class="group-badge">Garee Dargaggoota</span>
+                            <span class="group-badge">Garee Wengeela</span>
+                            <span class="group-badge">Garee Farffaatoota</span>
+                            <span class="group-badge">Garee Misoomaa</span>
+                            <span class="group-badge">Garee Kadhannaa</span>
+                            <span class="group-badge">Garee Odditii</span>
+                            <span class="group-badge">Garee Worship</span>
+                            <span class="group-badge">Garee Miidiyaa</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="gallery" style="background:var(--bg);">
+        <div class="container">
+            <h2 class="section-title">📸 Gallery</h2>
+            <p class="section-sub">Moments from our congregation</p>
+            <div class="gallery-grid" id="galleryGrid"></div>
+        </div>
+    </section>
+
+    <section id="video" style="background:#fff;">
+        <div class="container">
+            <h2 class="section-title">🎬 Videos</h2>
+            <p class="section-sub">Sermons, worship, and events</p>
+            <div class="video-grid" id="videoGrid"></div>
+        </div>
+    </section>
+
+    <section id="announcements" style="background:var(--bg);">
+        <div class="container">
+            <h2 class="section-title">📢 Announcements</h2>
+            <p class="section-sub">Stay updated with news from the congregation</p>
+            <div id="announcementList"></div>
+        </div>
+    </section>
+
+    <section id="events" style="background:#fff;">
+        <div class="container">
+            <h2 class="section-title">📅 Events &amp; Saganta (Schedule)</h2>
+            <p class="section-sub">Upcoming events and services</p>
+            <div id="eventList"></div>
+        </div>
+    </section>
+
+    <section id="contact" style="background:var(--bg);">
+        <div class="container">
+            <h2 class="section-title">📬 Contact</h2>
+            <p class="section-sub">Get in touch with us</p>
+            <div class="contact-wrap">
+                <div class="contact-info">
+                    <div class="info-item"><i class="fas fa-map-marker-alt"></i> <span>Nagelle Borana, Ethiopia</span></div>
+                    <div class="info-item"><i class="fas fa-phone"></i> <span>+251 912 345 678</span></div>
+                    <div class="info-item"><i class="fas fa-envelope"></i> <span>eecmy.nagele@example.com</span></div>
+                    <div class="info-item"><i class="fas fa-clock"></i> <span>Worship: Sunday 9:00 AM &amp; 11:00 AM</span></div>
+                    <div style="margin-top:20px;">
+                        <p><strong>📍 Iddoo Beeksiisa (Announcement Place):</strong> Main Church Hall</p>
+                        <p><strong>📅 Guyyaa Saganta (Schedule):</strong> Every Sunday &amp; Wednesday</p>
+                    </div>
+                </div>
+                <form class="contact-form" id="contactForm" onsubmit="handleContact(event)">
+                    <input type="text" placeholder="Your Name" required />
+                    <input type="email" placeholder="Email" required />
+                    <textarea placeholder="Message" required></textarea>
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <section id="comments" style="background:#fff;">
+        <div class="container">
+            <h2 class="section-title">💬 Comments</h2>
+            <p class="section-sub">Share your thoughts and feedback</p>
+            <div class="comment-box">
+                <div id="commentList"></div>
+                <div class="comment-form">
+                    <div class="row">
+                        <input type="text" id="commentName" placeholder="Your Name" />
+                        <input type="email" id="commentEmail" placeholder="Email (optional)" />
+                    </div>
+                    <textarea id="commentText" placeholder="Write your comment..." rows="3"></textarea>
+                    <button class="btn btn-primary" onclick="addComment()">Post Comment</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <h4>EECMY Nagele Borana</h4>
+                    <p style="font-size:0.9rem;">A congregation of the Ethiopian Evangelical Church Mekane Yesus in Borana.</p>
+                </div>
+                <div>
+                    <h4>Quick Links</h4>
+                    <a href="#home">Home</a><br /><a href="#about">About</a><br /><a href="#gallery">Gallery</a><br /><a href="#contact">Contact</a>
+                </div>
+                <div>
+                    <h4>Follow Us</h4>
+                    <a href="#"><i class="fab fa-facebook"></i> Facebook</a><br />
+                    <a href="#"><i class="fab fa-youtube"></i> YouTube</a><br />
+                    <a href="#"><i class="fab fa-telegram"></i> Telegram</a>
+                </div>
+            </div>
+            <div class="copyright">&copy; 2026 EECMY Nagele Borana Congregation. All rights reserved.</div>
+        </div>
+    </footer>
+
+    <!-- ===== TOAST ===== -->
+    <div id="toast" class="toast"></div>
+
+    <script>
+        // ===================================================================
+        // DATA STORE
+        // ===================================================================
+        const STORE = {
+            announcements: 'eecmy_announcements',
+            events: 'eecmy_events',
+            gallery: 'eecmy_gallery',
+            videos: 'eecmy_videos',
+            comments: 'eecmy_comments'
+        };
+        const AUTH_KEY = 'eecmy_logged_in';
+
+        function getData(key) {
+            try { return JSON.parse(localStorage.getItem(key)) || []; } catch { return []; }
+        }
+
+        function setData(key, data) {
+            localStorage.setItem(key, JSON.stringify(data));
+        }
+
+        // ===================================================================
+        // SEED DEFAULTS
+        // ===================================================================
+        function seedDefaults() {
+            if (!localStorage.getItem(STORE.announcements)) {
+                setData(STORE.announcements, [
+                    { id: Date.now() + 1, title: 'Welcome to EECMY Nagele Borana', desc: 'Join us every Sunday at 9:00 AM.',
+                        date: '2026-01-15' },
+                    { id: Date.now() + 2, title: 'Youth Revival Week', desc: 'Special revival program for youth from Feb 10-14.',
+                        date: '2026-02-10' },
+                ]);
+            }
+            if (!localStorage.getItem(STORE.events)) {
+                setData(STORE.events, [
+                    { id: Date.now() + 3, title: 'Sunday Worship', desc: 'Morning service with Holy Communion.',
+                        date: '2026-01-19' },
+                    { id: Date.now() + 4, title: 'Bible Study', desc: 'Wednesday Bible study at 6:00 PM.',
+                    date: '2026-01-22' },
+                ]);
+            }
+            if (!localStorage.getItem(STORE.gallery)) {
+                setData(STORE.gallery, [
+                    { id: Date.now() + 5, label: 'Church Building' },
+                    { id: Date.now() + 6, label: 'Youth Group' },
+                    { id: Date.now() + 7, label: 'Worship Service' },
+                    { id: Date.now() + 8, label: 'Community Outreach' },
+                ]);
+            }
+            if (!localStorage.getItem(STORE.videos)) {
+                setData(STORE.videos, [
+                    { id: Date.now() + 9, title: 'Sermon – Sunday Service' },
+                    { id: Date.now() + 10, title: 'Youth Choir Performance' },
+                ]);
+            }
+            if (!localStorage.getItem(STORE.comments)) {
+                setData(STORE.comments, [
+                    { id: Date.now() + 11, name: 'Dereje', email: '', text: 'Wonderful congregation! God bless you all.',
+                        date: new Date().toISOString() },
+                ]);
+            }
+        }
+        seedDefaults();
+
+        // ===================================================================
+        // AUTH
+        // ===================================================================
+        function checkAuth() {
+            return localStorage.getItem(AUTH_KEY) === 'true';
+        }
+
+        function handleLogin() {
+            const user = document.getElementById('loginUser').value.trim();
+            const pass = document.getElementById('loginPass').value.trim();
+            const errorEl = document.getElementById('loginError');
+            if (user === 'admin' && pass === 'admin123') {
+                localStorage.setItem(AUTH_KEY, 'true');
+                errorEl.textContent = '';
+                openDashboard();
+            } else {
+                errorEl.textContent = '❌ Invalid username or password.';
+            }
+        }
+
+        function handleLogout() {
+            localStorage.removeItem(AUTH_KEY);
+            closeDashboard();
+            document.getElementById('loginOverlay').classList.remove('hidden');
+            toast('Logged out.');
+        }
+
+        // ===================================================================
+        // DASHBOARD TOGGLE
+        // ===================================================================
+        function openDashboard() {
+            document.getElementById('loginOverlay').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+            updateStats();
+            renderAdminAnnouncements();
+            renderAdminEvents();
+            renderAdminGallery();
+            renderAdminVideos();
+            renderAdminComments();
+            // Set active tab
+            document.querySelectorAll('.dash-sidebar .menu-item').forEach(el => el.classList.remove('active'));
+            document.querySelector('.dash-sidebar .menu-item[data-page="dashOverview"]')?.classList.add('active');
+            document.querySelectorAll('.dash-content .page-section').forEach(el => el.classList.remove('active'));
+            document.getElementById('dashOverview')?.classList.add('active');
+        }
+
+        function closeDashboard() {
+            document.getElementById('dashboard').classList.add('hidden');
+        }
+
+        // Admin login button in header
+        document.getElementById('adminLoginBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            if (checkAuth()) {
+                openDashboard();
+            } else {
+                document.getElementById('loginOverlay').classList.remove('hidden');
+            }
+        });
+
+        // Enter key on login
+        document.getElementById('loginPass').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') handleLogin();
+        });
+        document.getElementById('loginUser').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') handleLogin();
+        });
+
+        // Sidebar navigation
+        document.querySelectorAll('.dash-sidebar .menu-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.dash-sidebar .menu-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                const pageId = this.dataset.page;
+                document.querySelectorAll('.dash-content .page-section').forEach(p => p.classList.remove('active'));
+                const target = document.getElementById(pageId);
+                if (target) target.classList.add('active');
+                // refresh lists if needed
+                if (pageId === 'dashAnnounce') renderAdminAnnouncements();
+                if (pageId === 'dashEvents') renderAdminEvents();
+                if (pageId === 'dashGallery') renderAdminGallery();
+                if (pageId === 'dashVideos') renderAdminVideos();
+                if (pageId === 'dashComments') renderAdminComments();
+            });
+        });
+
+        // ===================================================================
+        // STATS
+        // ===================================================================
+        function updateStats() {
+            document.getElementById('statAnnounce').textContent = getData(STORE.announcements).length;
+            document.getElementById('statEvents').textContent = getData(STORE.events).length;
+            document.getElementById('statGallery').textContent = getData(STORE.gallery).length;
+            document.getElementById('statVideos').textContent = getData(STORE.videos).length;
+            document.getElementById('statComments').textContent = getData(STORE.comments).length;
+        }
+
+        // ===================================================================
+        // RENDER PUBLIC
+        // ===================================================================
+        function renderAnnouncements() {
+            const list = document.getElementById('announcementList');
+            const data = getData(STORE.announcements);
+            if (!data.length) { list.innerHTML = '<p style="color:var(--text-light);">No announcements yet.</p>'; return; }
+            list.innerHTML = data.map(a =>
+                `<div class="timeline-item"><div class="date-tag">📅 ${a.date || 'TBA'}</div><h4>${a.title}</h4><p>${a.desc || ''}</p></div>`
+            ).join('');
+        }
+
+        function renderEvents() {
+            const list = document.getElementById('eventList');
+            const data = getData(STORE.events);
+            if (!data.length) { list.innerHTML = '<p style="color:var(--text-light);">No events scheduled.</p>'; return; }
+            list.innerHTML = data.map(e =>
+                `<div class="timeline-item" style="border-left-color:var(--primary);"><div class="date-tag">📅 ${e.date || 'TBA'}</div><h4>${e.title}</h4><p>${e.desc || ''}</p></div>`
+            ).join('');
+        }
+
+        function renderGallery() {
+            const grid = document.getElementById('galleryGrid');
+            const data = getData(STORE.gallery);
+            if (!data.length) { grid.innerHTML = '<p style="color:var(--text-light);">No gallery items.</p>'; return; }
+            grid.innerHTML = data.map(g =>
+                `<div class="gallery-item"><span class="placeholder-text">🖼️ ${g.label || 'Image'}</span></div>`
+            ).join('');
+        }
+
+        function renderVideos() {
+            const grid = document.getElementById('videoGrid');
+            const data = getData(STORE.videos);
+            if (!data.length) { grid.innerHTML = '<p style="color:var(--text-light);">No videos added.</p>'; return; }
+            grid.innerHTML = data.map(v =>
+                `<div class="video-card"><div class="video-placeholder" onclick="alert('🎬 ${v.title || 'Video'}')"><i class="fas fa-play-circle"></i></div><div class="video-info"><h4>${v.title || 'Untitled'}</h4></div></div>`
+            ).join('');
+        }
+
+        function renderComments() {
+            const list = document.getElementById('commentList');
+            const data = getData(STORE.comments);
+            if (!data.length) { list.innerHTML = '<p style="color:var(--text-light);">No comments yet. Be the first!</p>'; return; }
+            list.innerHTML = data.map(c =>
+                `<div class="comment-item"><span class="name">${c.name || 'Anonymous'}</span><span class="date">${new Date(c.date).toLocaleDateString()}</span><div class="text">${c.text}</div></div>`
+            ).join('');
+        }
+
+        // ===================================================================
+        // ADMIN RENDER LISTS
+        // ===================================================================
+        function renderAdminAnnouncements() {
+            const list = document.getElementById('adminAnnounceList');
+            const data = getData(STORE.announcements);
+            list.innerHTML = data.map(a =>
+                `<div class="admin-list-item"><span><strong>${a.title}</strong> — ${a.desc || ''} <span style="color:#999;font-size:0.8rem;">${a.date || ''}</span></span><button class="del" onclick="deleteItem('${STORE.announcements}', ${a.id})">&times;</button></div>`
+            ).join('');
+        }
+
+        function renderAdminEvents() {
+            const list = document.getElementById('adminEventList');
+            const data = getData(STORE.events);
+            list.innerHTML = data.map(e =>
+                `<div class="admin-list-item"><span><strong>${e.title}</strong> — ${e.desc || ''} <span style="color:#999;font-size:0.8rem;">${e.date || ''}</span></span><button class="del" onclick="deleteItem('${STORE.events}', ${e.id})">&times;</button></div>`
+            ).join('');
+        }
+
+        function renderAdminGallery() {
+            const list = document.getElementById('adminGalleryList');
+            const data = getData(STORE.gallery);
+            list.innerHTML = data.map(g =>
+                `<div class="admin-list-item"><span>🖼️ ${g.label || 'Image'}</span><button class="del" onclick="deleteItem('${STORE.gallery}', ${g.id})">&times;</button></div>`
+            ).join('');
+        }
+
+        function renderAdminVideos() {
+            const list = document.getElementById('adminVideoList');
+            const data = getData(STORE.videos);
+            list.innerHTML = data.map(v =>
+                `<div class="admin-list-item"><span>🎬 ${v.title || 'Untitled'}</span><button class="del" onclick="deleteItem('${STORE.videos}', ${v.id})">&times;</button></div>`
+            ).join('');
+        }
+
+        function renderAdminComments() {
+            const list = document.getElementById('adminCommentList');
+            const data = getData(STORE.comments);
+            list.innerHTML = data.map(c =>
+                `<div class="admin-list-item"><span><strong>${c.name || 'Anonymous'}</strong>: ${c.text} <span style="color:#999;font-size:0.8rem;">${new Date(c.date).toLocaleDateString()}</span></span><button class="del" onclick="deleteItem('${STORE.comments}', ${c.id})">&times;</button></div>`
+            ).join('');
+        }
+
+        // ===================================================================
+        // CRUD OPERATIONS
+        // ===================================================================
+        function addAnnouncement() {
+            const title = document.getElementById('announceTitle').value.trim();
+            const desc = document.getElementById('announceDesc').value.trim();
+            const date = document.getElementById('announceDate').value;
+            if (!title) { toast('Please enter a title.'); return; }
+            const data = getData(STORE.announcements);
+            data.push({ id: Date.now(), title, desc, date });
+            setData(STORE.announcements, data);
+            document.getElementById('announceTitle').value = '';
+            document.getElementById('announceDesc').value = '';
+            document.getElementById('announceDate').value = '';
+            renderAnnouncements();
+            renderAdminAnnouncements();
+            updateStats();
+            toast('Announcement added!');
+        }
+
+        function addEvent() {
+            const title = document.getElementById('eventTitle').value.trim();
+            const desc = document.getElementById('eventDesc').value.trim();
+            const date = document.getElementById('eventDate').value;
+            if (!title) { toast('Please enter an event title.'); return; }
+            const data = getData(STORE.events);
+            data.push({ id: Date.now(), title, desc, date });
+            setData(STORE.events, data);
+            document.getElementById('eventTitle').value = '';
+            document.getElementById('eventDesc').value = '';
+            document.getElementById('eventDate').value = '';
+            renderEvents();
+            renderAdminEvents();
+            updateStats();
+            toast('Event added!');
+        }
+
+        function addGalleryItem() {
+            const label = document.getElementById('galleryInput').value.trim();
+            if (!label) { toast('Please enter a label or URL.'); return; }
+            const data = getData(STORE.gallery);
+            data.push({ id: Date.now(), label });
+            setData(STORE.gallery, data);
+            document.getElementById('galleryInput').value = '';
+            renderGallery();
+            renderAdminGallery();
+            updateStats();
+            toast('Gallery item added!');
+        }
+
+        function addVideoItem() {
+            const title = document.getElementById('videoInput').value.trim();
+            if (!title) { toast('Please enter a video title.'); return; }
+            const data = getData(STORE.videos);
+            data.push({ id: Date.now(), title });
+            setData(STORE.videos, data);
+            document.getElementById('videoInput').value = '';
+            renderVideos();
+            renderAdminVideos();
+            updateStats();
+            toast('Video added!');
+        }
+
+        function deleteItem(key, id) {
+            let data = getData(key);
+            data = data.filter(item => item.id !== id);
+            setData(key, data);
+            renderAnnouncements();
+            renderEvents();
+            renderGallery();
+            renderVideos();
+            renderComments();
+            renderAdminAnnouncements();
+            renderAdminEvents();
+            renderAdminGallery();
+            renderAdminVideos();
+            renderAdminComments();
+            updateStats();
+            toast('Item deleted.');
+        }
+
+        function addComment() {
+            const name = document.getElementById('commentName').value.trim() || 'Anonymous';
+            const text = document.getElementById('commentText').value.trim();
+            if (!text) { toast('Please write a comment.'); return; }
+            const data = getData(STORE.comments);
+            data.push({ id: Date.now(), name, email: document.getElementById('commentEmail').value.trim(), text,
+                date: new Date().toISOString() });
+            setData(STORE.comments, data);
+            document.getElementById('commentName').value = '';
+            document.getElementById('commentEmail').value = '';
+            document.getElementById('commentText').value = '';
+            renderComments();
+            renderAdminComments();
+            updateStats();
+            toast('Comment posted!');
+        }
+
+        // ===================================================================
+        // CONTACT FORM
+        // ===================================================================
+        function handleContact(e) {
+            e.preventDefault();
+            toast('📩 Your message has been sent. Thank you!');
+            e.target.reset();
+        }
+
+        // ===================================================================
+        // TOAST
+        // ===================================================================
+        function toast(msg) {
+            const el = document.getElementById('toast');
+            el.textContent = msg;
+            el.classList.add('show');
+            clearTimeout(el._timer);
+            el._timer = setTimeout(() => el.classList.remove('show'), 3000);
+        }
+
+        // ===================================================================
+        // NAV TOGGLE (mobile)
+        // ===================================================================
+        document.getElementById('navToggle').addEventListener('click', function() {
+            document.getElementById('navLinks').classList.toggle('open');
+        });
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('navLinks').classList.remove('open');
+                if (link.dataset.page) {
+                    document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // ===================================================================
+        // INIT
+        // ===================================================================
+        renderAnnouncements();
+        renderEvents();
+        renderGallery();
+        renderVideos();
+        renderComments();
+
+        // If already logged in, hide login overlay and show dashboard? No, we start clean.
+        // But if they refresh while logged in, we can auto-login.
+        if (checkAuth()) {
+            document.getElementById('loginOverlay').classList.add('hidden');
+            // Don't auto-open dashboard, just keep site visible.
+        }
+
+        console.log('✅ EECMY Nagele Borana website loaded!');
+    </script>
+</body>
+</html>
